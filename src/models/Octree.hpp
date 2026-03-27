@@ -1,5 +1,7 @@
 #pragma once
 #include "Base.hpp"
+#include <array>
+#include <string>
 
 #define TopLeftFront 0
 #define TopRightFront 1
@@ -20,6 +22,15 @@ struct BoundingBox{
     bool collisionCheck(face f);
 };
 
+struct VoxelObject {
+    std::vector<point> vertices;
+    std::vector<std::array<int, 4>> faces;
+    int voxelCount;
+
+    VoxelObject();
+    std::string toOBJString() const;
+};
+
 
 class Octree{
     private:
@@ -35,6 +46,8 @@ class Octree{
         Octree(point pmax, point pmin, int depth, std::vector<face> l);
         void subdivide();
         int getVoxelsCount();
+        void getLeafBoxes(std::vector<BoundingBox> &B);
+        VoxelObject buildVoxelObject();
 };
 
 
