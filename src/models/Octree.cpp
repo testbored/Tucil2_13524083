@@ -37,11 +37,11 @@ void Octree::addFacetoList(face f){
     listF.push_back(f);
 }
 
-Octree::Octree() : isLeaf(false), child({nullptr}), B(BoundingBox()), m_depth(0){
+Octree::Octree() : isLeaf(false), B(BoundingBox()), m_depth(0){
     for(int i = 0; i < 8; ++i) child[i] = nullptr;
 }
 
-Octree::Octree(point pmax, point pmin, int depth, std::vector<face> l) : isLeaf(false), child({nullptr}), B(BoundingBox(pmax, pmin)), m_depth(depth), listF(l){
+Octree::Octree(point pmax, point pmin, int depth, std::vector<face> l) : isLeaf(false), B(BoundingBox(pmax, pmin)), m_depth(depth), listF(l){
     for(int i = 0; i < 8; ++i) child[i] = nullptr;
 }
 
@@ -282,3 +282,32 @@ bool BoundingBox::collisionCheck(face f){
     return true;
 }
 
+void Octree::getStatistics(int n){
+    std::vector<int> count;
+    std::cout<<"Statistics Searched Node/Depth" << std::endl;
+    for(int i = 1; i <= n; i++){
+            int cur = getNodeCount(i);
+            count.push_back(cur);
+            std::cout << "Depth " << i << ": " << cur << std::endl;  
+    }
+    std::cout<<"Statisctic Unsearched Node/Depth" << std::endl;
+    for(int i = 1; i <= n; i++){
+        std::cout<<"Depth " << i << ": " << std::pow(8, i) - count.at(i - 1) << std::endl;  
+    }
+    std::cout << "Octree depth: " << n << endl;
+}
+
+
+
+int Octree::getNodeCount(int n){
+    if(n == 0) return 1;
+    else{
+        int count = 0;
+        for(int i = 0; i < 8; i++){
+            if(child[i] != nullptr){
+                count += child[i]->getNodeCount(n - 1);
+            }
+        }
+        return count;
+    }
+}
