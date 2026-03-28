@@ -48,8 +48,6 @@ class Octree{
         int getVoxelsCount();
         void getLeafBoxes(std::vector<BoundingBox> &B);
         VoxelObject buildVoxelObject();
-        void getStatistics(int n);
-        int getNodeCount(int n);
 };
 
 

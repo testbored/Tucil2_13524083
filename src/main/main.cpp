@@ -6,7 +6,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <chrono>
 
 namespace fs = std::filesystem;
 
@@ -59,11 +58,11 @@ bool readDepth(int &depth) {
 }
 
 int main() {
-    const fs::path testcaseDir("src/test/testcase");
-    const fs::path resultDir("src/test/result");
+    const fs::path testcaseDir("test/testcase");
+    const fs::path resultDir("test/result");
 
     std::string fileName;
-    std::cout << "Input file name from src/test/testcase: ";
+    std::cout << "Input file name from test/testcase: ";
     std::getline(std::cin, fileName);
 
     if (fileName.empty()) {
@@ -97,7 +96,6 @@ int main() {
         std::cout << "Failed to compute bounds from parsed faces." << std::endl;
         return 1;
     }
-    auto start = std::chrono::steady_clock::now();
 
     Octree octree(maxPoint, minPoint, depth, faces);
     octree.subdivide();
@@ -115,17 +113,12 @@ int main() {
 
     outputFile << voxelObject.toOBJString();
     outputFile.close();
-    auto end = std::chrono::steady_clock::now();
 
     std::cout << "Voxelization complete." << std::endl;
     std::cout << "Voxels: " << voxelObject.voxelCount << std::endl;
     std::cout << "Vertices: " << voxelObject.vertices.size() << std::endl;
     std::cout << "Faces: " << voxelObject.faces.size() << std::endl;
     std::cout << "Output: " << outputPath.string() << std::endl;
-    octree.getStatistics(depth);
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Time: " << duration.count() << "ms" << std::endl;
-    std::cout << "Path: src/test/result";
 
     return 0;
 }
